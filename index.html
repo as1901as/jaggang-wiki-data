@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>자깡위키</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header id="top-bar">
+    <div class="topbar-inner">
+      <div class="left-section">
+        <span class="logo">자깡위키</span>
+        <nav class="sys-menu">
+          <a href="#"> 컨텐츠</a>
+          <a href="#"> 컨텐츠</a>
+          <a href="#"> 컨텐츠</a>
+        </nav>
+      </div>
+      <nav class="menu-links">
+        <a href="#">컨텐츠</a>
+        <a href="#">컨텐츠</a>
+        <a href="#">컨텐츠</a>
+      </nav>
+    </div>
+  </header>
+  <div id="container">
+    <main id="content">
+      <h1>자깡</h1>
+      <div class="wiki-profile-wrapper">
+        <!-- ✅ 좌측 목차 -->
+        <nav class="toc">
+          <h3>목차</h3>
+          <ul>
+            <li><a href="#section1">1. 개요</a></li>
+            <li><a href="#section2">2. 방송 역사</a></li>
+            <li><a href="#section3">3. 마스코트(자캐)</a></li>
+            <li><a href="#section4">4. 특징</a></li>
+            <li><a href="#section5">5. 용어와 밈</a></li>
+            <li><a href="#section6">6. 콘텐츠</a></li>
+            <li><a href="#section7">7. 팬덤</a></li>
+            <li><a href="#section8">8. 팬카페</a></li>
+            <li><a href="#section9">9. 유튜브 채널</a></li>
+            <li><a href="#section10">10. 게임 채널(본채널)</a></li>
+            <li><a href="#section11">11. 브이로그 채널(본채널)</a></li>
+            <li><a href="#section12">12. 관련 인물</a></li>
+            <li><a href="#section13">13. 논란 및 사건 사고</a></li>
+            <li><a href="#section14">14. 컴퓨터 사양</a></li>
+            <li><a href="#section15">15. 어록</a></li>
+            <li><a href="#section16">16. 여담</a></li>
+          </ul>
+        </nav>
+      <!-- ✅ 우측 프로필 -->
+      <aside class="wiki-profile-box">
+        <div class="profile-title">자깡</div>
+        <img src="img/jaggang.png" alt="자깡 프로필" class="profile-image" />
+        
+        
+        <div class="profile-content">
+          <table class="profile-table">
+            <tr><th>활동명</th><td>자깡</td></tr>
+            <tr><th>출생</th><td>1900년 1월 1일 (만 100세)</td></tr>
+            <tr><th>국적</th><td>대한민국</td></tr>
+            <tr><th>신체</th><td>몸무게 64(57)kg 키 174cm</td></tr>
+            <tr><th>학력</th><td>고졸</td></tr>
+            <tr><th>가족</th><td>가족정보</td></tr>
+            <tr><th>반려견</th><td>콩이</td></tr>
+            <tr><th colspan="2">기타정보</tr>
+            <tr><td colspan="2"><button class="toggle-profile">[ 접기·펼치기 ]</button></tr>
+            <tr class="profile-hidden"><th>플랫폼</th><td><a href="https://chzzk.naver.com/a1ae0d71f2090e8d7d466b57ca6ec572" target="_blank" style="text-decoration-line: none;"><img src="img/zzz.svg" alt="zzz" width="20px"/></a>&nbsp;&nbsp;&nbsp;<a href="https://ch.sooplive.co.kr/podo6102" target="_blank" style="text-decoration-line: none;"><img src="img/soop.svg" alt="soop" width="20px"/></a></td></tr>
+            <tr class="profile-hidden"><th>커뮤니티</th><td><a href="https://www.youtube.com/@jakkang" target="_blank" style="text-decoration-line: none;"><img src="img/youtube.svg" alt="youtube" width="20px"/></a>&nbsp;&nbsp;&nbsp;<a href="https://cafe.naver.com/jakkang0212" target="_blank" style="text-decoration-line: none;"><img src="img/cafe.svg" alt="cafe" width="20px"/></a></td></tr>
+          </table>
+        </div>
+      </aside>
+        <!-- ✅ 본문 -->
+        <div class="wiki-main-text">
+
+        </div>
+      </div>
+    </main>
+    <!-- 사이드바 -->
+    <aside id="sidebar">
+      <div class="sidebar-card">
+        <h4>컨텐츠1</h4>
+      </div>
+      <div class="sidebar-card">
+        <h4>컨텐츠2</h4>
+      </div>
+    </aside>
+  </div>
+  <footer>
+    <p>ⓒ 2025 나무카피. 모든 문서는 실제 나무위키와 관계없습니다.</p>
+  </footer>
+  <script src="js/script.js"></script>
+</body>
+</html>
+
+<script>
+  document.querySelector(".toggle-profile").addEventListener("click", function () {
+    const rows = document.querySelectorAll(".profile-hidden");
+    const isHidden = rows[0].classList.contains("hide");
+
+    rows.forEach(row => row.classList.toggle("hide"));
+
+    this.textContent = isHidden
+      ? "[ 접기·펼치기 ]"
+      : "[ 접기·펼치기 ]";
+  });
+</script>
