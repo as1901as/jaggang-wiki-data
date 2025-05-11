@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tocLinks = document.querySelectorAll(".toc a");
     const mainText = document.querySelector(".wiki-main-text");
   
-    fetch('/json/content.json')
+    fetch('/data/content.json')
       .then(response => response.json())
       .then(data => {
         mainText.innerHTML = "";
