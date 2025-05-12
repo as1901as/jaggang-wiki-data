@@ -137,6 +137,21 @@ body {
   margin: 20px 0;
 }
 
+.edit-button {
+  margin-top: 10px;
+  background: #003399;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.edit-button:hover {
+  background: #001f66;
+}
+
 a {
   color: #003399;
   text-decoration: none;
