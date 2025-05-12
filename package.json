@@ -1,25 +1,12 @@
 {
-  "name": "jaggang-wiki-data",
+  "name": "jaggang-wiki",
   "version": "1.0.0",
-  "description": "jaggang-wiki-data",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo 'No build step required'"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/as1901as/jaggang-wiki-data.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/as1901as/jaggang-wiki-data/issues"
-  },
-  "homepage": "https://github.com/as1901as/jaggang-wiki-data#readme",
   "dependencies": {
-    "axios": "^1.9.0",
-    "cheerio": "^1.0.0",
-    "node-fetch": "^2.7.0"
+    "axios": "^1.6.7",
+    "cheerio": "^1.0.0-rc.12",
+    "node-fetch": "^2.6.1"
   }
 }

@@ -1,6 +1,9 @@
 [build]
   command = "npm run build"
-  functions = "netlify/functions"
+  publish = "./" 
 
 [functions]
   directory = "netlify/functions"
+
+[functions."fetchKBO"]
+  schedule = "0 3 * * *" 
