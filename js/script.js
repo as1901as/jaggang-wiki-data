@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const tocLinks = document.querySelectorAll(".toc a");
   const mainText = document.querySelector(".wiki-main-text");
 
-  fetch("/json/content.json")
+  // JSON 데이터 불러오기
+  fetch("/data/content.json")
     .then((response) => response.json())
     .then((data) => {
       mainText.innerHTML = "";
@@ -11,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = link.getAttribute("href").replace("#", "");
         const titleText = link.textContent.trim();
 
-        // 제목 h2 + 접기 버튼
+        // 섹션 제목 (h2)
         const h2 = document.createElement("h2");
         h2.id = id;
         h2.textContent = titleText;
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sectionBody.className = "section-body";
         sectionBody.innerHTML = data[id] || "<p>내용이 없습니다.</p>";
 
-        // 접기 토글
+        // 접기/펼치기 기능
         toggleBtn.addEventListener("click", () => {
           sectionBody.classList.toggle("hide");
           toggleBtn.textContent = sectionBody.classList.contains("hide")
@@ -42,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         editBtn.className = "edit-button";
         sectionBody.appendChild(editBtn);
 
-        // ✅ textarea + 저장 버튼
+        // ✅ 텍스트 편집창 (숨김)
         const textarea = document.createElement("textarea");
         textarea.style.display = "none";
         textarea.style.width = "100%";
@@ -51,19 +52,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const saveBtn = document.createElement("button");
         saveBtn.textContent = "저장";
-        saveBtn.style.display = "none";
         saveBtn.className = "save-button";
+        saveBtn.style.display = "none";
         sectionBody.appendChild(saveBtn);
 
-        // 편집 토글
+        // ✅ 편집 버튼 클릭 시 원본 데이터만 표시
         editBtn.addEventListener("click", () => {
           const isVisible = textarea.style.display === "block";
           textarea.style.display = isVisible ? "none" : "block";
           saveBtn.style.display = isVisible ? "none" : "inline-block";
-          textarea.value = sectionBody.innerHTML;
+          textarea.value = data[id] || "";
         });
 
-        // 저장 버튼 클릭
+        // ✅ 저장 버튼 클릭 시 업데이트
         saveBtn.addEventListener("click", () => {
           const updatedContent = textarea.value;
 
