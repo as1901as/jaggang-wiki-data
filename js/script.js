@@ -2,8 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const tocLinks = document.querySelectorAll(".toc a");
   const mainText = document.querySelector(".wiki-main-text");
   const searchInput = document.getElementById("searchInput");
+  const md = window.markdownit(); // 마크다운 파서 초기화
 
-  // ✅ 본문 데이터 불러오기
+  // ✅ 본문 데이터 로드
   fetch("/data/content.json")
     .then((response) => response.json())
     .then((data) => {
@@ -33,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const sectionBody = document.createElement("div");
         sectionBody.className = "section-body";
 
-        // ✅ 편집 불가능한 "1. 개요" 섹션
         if (id === "section1") {
           sectionBody.innerHTML = `
             <table class="info-table">
@@ -43,8 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </table>
           `;
         } else {
-          // ✅ 일반 섹션 (편집 가능)
-          sectionBody.innerHTML = data[id] || "<p>내용이 없습니다.</p>";
+          sectionBody.innerHTML = md.render(data[id] || "");
 
           const editBtn = document.createElement("button");
           editBtn.textContent = "[ 편집 ]";
@@ -57,21 +56,30 @@ document.addEventListener("DOMContentLoaded", () => {
           textarea.style.height = "150px";
           sectionBody.appendChild(textarea);
 
+          const preview = document.createElement("div");
+          preview.className = "markdown-preview";
+          preview.style.display = "none";
+          sectionBody.appendChild(preview);
+
           const saveBtn = document.createElement("button");
           saveBtn.textContent = "저장";
           saveBtn.className = "save-button";
           saveBtn.style.display = "none";
           sectionBody.appendChild(saveBtn);
 
-          // 편집 열기
           editBtn.addEventListener("click", () => {
             const isVisible = textarea.style.display === "block";
             textarea.style.display = isVisible ? "none" : "block";
+            preview.style.display = isVisible ? "none" : "block";
             saveBtn.style.display = isVisible ? "none" : "inline-block";
             textarea.value = data[id] || "";
+            preview.innerHTML = md.render(textarea.value);
           });
 
-          // 저장 시 Netlify 함수 호출
+          textarea.addEventListener("input", () => {
+            preview.innerHTML = md.render(textarea.value);
+          });
+
           saveBtn.addEventListener("click", () => {
             const updatedContent = textarea.value;
 
@@ -79,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
               .then((res) => res.json())
               .then((currentData) => {
                 currentData[id] = updatedContent;
-
                 return fetch("/.netlify/functions/updateContent", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -102,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
 
-        // 접기/펼치기
         toggleBtn.addEventListener("click", () => {
           sectionBody.classList.toggle("hide");
           toggleBtn.textContent = sectionBody.classList.contains("hide") ? "[ ▶ ]" : "[ ▼ ]";
@@ -111,8 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
         sectionContainer.appendChild(sectionBody);
         mainText.appendChild(h2);
         mainText.appendChild(sectionContainer);
-
-        // ✅ 구분선
         const hr = document.createElement("hr");
         hr.className = "section-divider";
         mainText.appendChild(hr);
@@ -123,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("본문 로딩 오류:", error);
     });
 
-  // ✅ 검색창: 나무위키 외부 검색
+  // ✅ 나무위키 외부 검색 (Enter 키)
   searchInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       const keyword = searchInput.value.trim();
@@ -135,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ✅ 검색창 입력: 페이지 내 필터링
+  // ✅ 실시간 필터링
   searchInput.addEventListener("input", () => {
     const keyword = searchInput.value.trim().toLowerCase();
 

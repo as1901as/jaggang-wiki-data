@@ -223,14 +223,28 @@ textarea {
 }
 
 .section-body {
-  white-space: pre-wrap;  /* ✅ 줄바꿈과 공백 유지 */
-  font-family: inherit;
-  font-size: 14px;
-  margin:12px 0;
+  padding: 12px 16px; /* ✅ 본문 좌우 여백 */
+  background-color: #fff;
+  font-size:14px;
+  /* white-space: pre-wrap; */
 }
 
 .section-body.hide {
   display: none;
+}
+
+/* ✅ 미리보기 영역 박스 내부로 정렬 */
+.markdown-preview {
+  margin-top: 10px;
+  padding: 12px 16px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: auto;
 }
 
 /* 🔍 검색바 전체 컨테이너 */
