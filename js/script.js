@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveBtn.addEventListener("click", () => {
           const updatedContent = textarea.value;
 
-          fetch("/data/content.json")
+          fetch("/json/content.json")
             .then((res) => res.json())
             .then((currentData) => {
               currentData[id] = updatedContent;
