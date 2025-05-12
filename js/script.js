@@ -64,7 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
           saveBtn.style.display = isVisible ? "none" : "inline-block";
           textarea.value = data[id] || "";
         });
-
+        textarea.addEventListener("input", () => {
+          textarea.style.height = "auto";
+          textarea.style.height = textarea.scrollHeight + "px";
+        });
         // 저장 클릭 시 API 호출
         saveBtn.addEventListener("click", () => {
           const updatedContent = textarea.value;
