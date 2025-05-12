@@ -5,6 +5,7 @@ const fetch = require("node-fetch");
 exports.handler = async function () {
   try {
     // 1. 크롤링 대상 URL (Naver KBO 순위)
+    console.log("1");
     const url = "https://sports.news.naver.com/kbaseball/record/index.nhn?category=kbo";
     const res = await axios.get(url);
     const $ = cheerio.load(res.data);
