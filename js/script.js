@@ -127,6 +127,36 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("본문 로딩 오류:", error);
     });
 
+  // KBO 순위 로드
+  fetch("/data/kbo_rank.json")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("kbo-rank");
+      const table = document.createElement("table");
+      table.className = "rank-table";
+      table.innerHTML = `
+        <thead>
+          <tr><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th></tr>
+        </thead>
+        <tbody>
+          ${data.map(row => `
+            <tr>
+              <td>${row.team}</td>
+              <td>${row.win}</td>
+              <td>${row.loss}</td>
+              <td>${row.draw}</td>
+              <td>${row.rate}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      `;
+      container.appendChild(table);
+    })
+    .catch(() => {
+      document.getElementById("kbo-rank").textContent = "순위를 불러올 수 없습니다.";
+    });
+
+
   // ✅ 나무위키 외부 검색 (Enter 키)
   searchInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {

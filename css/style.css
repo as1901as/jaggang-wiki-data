@@ -233,6 +233,21 @@ textarea {
   display: none;
 }
 
+.rank-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 8px;
+}
+.rank-table th, .rank-table td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  text-align: center;
+}
+.rank-table th {
+  background-color: #f0f0f0;
+}
+
 /* ✅ 미리보기 영역 박스 내부로 정렬 */
 .markdown-preview {
   margin-top: 10px;

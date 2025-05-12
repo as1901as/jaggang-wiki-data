@@ -1,2 +1,5 @@
 [build]
   functions = "netlify/functions"
+
+[functions."fetchKBO"]
+  schedule = "0 3 * * *"
