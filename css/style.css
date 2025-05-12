@@ -225,7 +225,7 @@ textarea {
 .section-body {
   white-space: pre-wrap;  /* ✅ 줄바꿈과 공백 유지 */
   font-family: inherit;
-  font-size: 16px;
+  font-size: 14px;
   margin:12px 0;
 }
 
