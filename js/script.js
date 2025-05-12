@@ -2,8 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tocLinks = document.querySelectorAll(".toc a");
   const mainText = document.querySelector(".wiki-main-text");
 
-  // JSON 데이터 불러오기
-  fetch("/data/content.json")
+  fetch("/data/content.json")  // ✅ 명확한 경로로 수정
     .then((response) => response.json())
     .then((data) => {
       mainText.innerHTML = "";
@@ -12,16 +11,25 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = link.getAttribute("href").replace("#", "");
         const titleText = link.textContent.trim();
 
-        // 섹션 제목 (h2)
+        // 제목 h2 + 버튼
         const h2 = document.createElement("h2");
         h2.id = id;
         h2.textContent = titleText;
 
+        const buttonGroup = document.createElement("span");
+        buttonGroup.className = "button-group";
+
         const toggleBtn = document.createElement("button");
         toggleBtn.className = "toggle-section";
         toggleBtn.textContent = "[ ▼ ]";
-        h2.appendChild(toggleBtn);
-        h2.appendChild(editBtn);
+        buttonGroup.appendChild(toggleBtn);
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "[ 편집 ]";
+        editBtn.className = "edit-button small-right";
+        buttonGroup.appendChild(editBtn);
+
+        h2.appendChild(buttonGroup);
 
         const sectionContainer = document.createElement("div");
         sectionContainer.className = "section-container";
@@ -30,21 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
         sectionBody.className = "section-body";
         sectionBody.innerHTML = data[id] || "<p>내용이 없습니다.</p>";
 
-        // 접기/펼치기 기능
+        // toggle 접기/펼치기
         toggleBtn.addEventListener("click", () => {
           sectionBody.classList.toggle("hide");
-          toggleBtn.textContent = sectionBody.classList.contains("hide")
-            ? "[ ▶ ]"
-            : "[ ▼ ]";
+          toggleBtn.textContent = sectionBody.classList.contains("hide") ? "[ ▶ ]" : "[ ▼ ]";
         });
 
-        // ✅ 편집 버튼
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "[ 편집 ]";
-        editBtn.className = "edit-button small-right";
-        sectionBody.appendChild(editBtn);
-
-        // ✅ 텍스트 편집창 (숨김)
+        // textarea + 저장 버튼
         const textarea = document.createElement("textarea");
         textarea.style.display = "none";
         textarea.style.width = "100%";
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveBtn.style.display = "none";
         sectionBody.appendChild(saveBtn);
 
-        // ✅ 편집 버튼 클릭 시 원본 데이터만 표시
+        // 편집 버튼 클릭
         editBtn.addEventListener("click", () => {
           const isVisible = textarea.style.display === "block";
           textarea.style.display = isVisible ? "none" : "block";
@@ -65,11 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
           textarea.value = data[id] || "";
         });
 
-        // ✅ 저장 버튼 클릭 시 업데이트
+        // 저장 클릭 시 API 호출
         saveBtn.addEventListener("click", () => {
           const updatedContent = textarea.value;
 
-          fetch("/json/content.json")
+          fetch("/data/content.json") // ✅ 경로 일치
             .then((res) => res.json())
             .then((currentData) => {
               currentData[id] = updatedContent;
@@ -98,6 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
         sectionContainer.appendChild(sectionBody);
         mainText.appendChild(h2);
         mainText.appendChild(sectionContainer);
+
+        // ✅ 구분선 추가
         const hr = document.createElement("hr");
         hr.className = "section-divider";
         mainText.appendChild(hr);
