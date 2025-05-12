@@ -136,7 +136,24 @@ body {
   padding: 10px 15px;
   margin: 20px 0;
 }
-
+h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.edit-button.small-right {
+  font-size: 12px;
+  padding: 2px 8px;
+  margin-left: 8px;
+  background-color: #e6e6e6;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.edit-button.small-right:hover {
+  background-color: #d4d4d4;
+}
 .edit-button,
 .save-button {
   margin-top: 10px;
@@ -153,7 +170,11 @@ body {
 .save-button:hover {
   background: #001f66;
 }
-
+.section-divider {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 30px 0;
+}
 a {
   color: #003399;
   text-decoration: none;

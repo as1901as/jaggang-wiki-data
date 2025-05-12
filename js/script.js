@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleBtn.className = "toggle-section";
         toggleBtn.textContent = "[ ▼ ]";
         h2.appendChild(toggleBtn);
+        h2.appendChild(editBtn);
 
         const sectionContainer = document.createElement("div");
         sectionContainer.className = "section-container";
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // ✅ 편집 버튼
         const editBtn = document.createElement("button");
         editBtn.textContent = "[ 편집 ]";
-        editBtn.className = "edit-button";
+        editBtn.className = "edit-button small-right";
         sectionBody.appendChild(editBtn);
 
         // ✅ 텍스트 편집창 (숨김)
@@ -68,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveBtn.addEventListener("click", () => {
           const updatedContent = textarea.value;
 
-          fetch("/json/content.json")
+          fetch("/data/content.json")
             .then((res) => res.json())
             .then((currentData) => {
               currentData[id] = updatedContent;
@@ -97,6 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
         sectionContainer.appendChild(sectionBody);
         mainText.appendChild(h2);
         mainText.appendChild(sectionContainer);
+        const hr = document.createElement("hr");
+        hr.className = "section-divider";
+        mainText.appendChild(hr);
       });
     })
     .catch((error) => {
