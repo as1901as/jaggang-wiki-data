@@ -1,11 +1,12 @@
-const searchForm = document.querySelector('#search-form');
-const searchInput = document.querySelector('#search-form input');
+const searchInput = document.getElementById("searchInput");
 
-function handleSearchSubmit(event) {
-    event.preventDefault();
-    const url = 'https://namu.wiki/w/' + searchInput.value;
-    window.open(url);
-    searchInput.value = '';
-}
-
-searchForm.addEventListener('submit', handleSearchSubmit);
+searchInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    const keyword = searchInput.value.trim();
+    if (keyword) {
+      const encoded = encodeURIComponent(keyword);
+      const namuwikiUrl = `https://namu.wiki/Search?q=${encoded}`;
+      window.open(namuwikiUrl, "_blank"); // 새 창 또는 새 탭 열기
+    }
+  }
+});
