@@ -137,7 +137,8 @@ body {
   margin: 20px 0;
 }
 
-.edit-button {
+.edit-button,
+.save-button {
   margin-top: 10px;
   background: #003399;
   color: white;
@@ -148,7 +149,8 @@ body {
   font-size: 14px;
 }
 
-.edit-button:hover {
+.edit-button:hover,
+.save-button:hover {
   background: #001f66;
 }
 
