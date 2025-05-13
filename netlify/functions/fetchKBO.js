@@ -2,12 +2,9 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
-exports.handler = async (event, context) => {
+exports.handler = async () => {
   try {
-    console.log('📦 KBO 순위 데이터 수집 시작...');
-
     const response = await axios.get('https://sports.news.naver.com/kbaseball/record/index?category=kbo');
     const $ = cheerio.load(response.data);
     const rows = $('.tbl_board tbody tr');
@@ -29,29 +26,17 @@ exports.handler = async (event, context) => {
       });
     });
 
-    console.log('✅ 순위 데이터 크롤링 성공');
-
-    const filePath = path.join(__dirname, '../../data/kbo_rank.json');
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-    console.log('✅ JSON 파일 저장 완료:', filePath);
-
-    // Git commit & push
-    execSync('git config --global user.email "bot@netlify.com"');
-    execSync('git config --global user.name "Netlify Bot"');
-    execSync('git add data/kbo_rank.json');
-    execSync('git commit -m "자동 업데이트: KBO 순위 갱신"');
-    execSync('git push origin main');
-    console.log('✅ GitHub 푸시 완료');
-
+    const output = JSON.stringify(data, null, 2);
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'KBO 순위 자동 갱신 완료!' })
+      headers: { 'Content-Type': 'application/json' },
+      body: output
     };
   } catch (error) {
-    console.error('❌ 오류 발생:', error.message);
+    console.error(error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'KBO 순위 갱신 실패', details: error.message })
+      body: JSON.stringify({ error: '크롤링 실패', detail: error.message })
     };
   }
 };
