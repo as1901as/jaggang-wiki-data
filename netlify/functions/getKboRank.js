@@ -1,12 +1,16 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
-
 exports.handler = async function () {
   try {
     const url = "https://www.koreabaseball.com/TeamRank/TeamRank.aspx";
     const { data } = await axios.get(url);
     const $ = cheerio.load(data);
+
+    // 로그 찍기
+    console.log("페이지 길이:", data.length);
+    const title = $("title").text();
+    console.log("페이지 타이틀:", title);
+
     const rows = $("table.tData tr");
+    console.log("선택된 tr 수:", rows.length);
 
     const ranks = [];
 
@@ -25,15 +29,18 @@ exports.handler = async function () {
       }
     });
 
+    console.log("파싱된 결과:", ranks);
+
     return {
       statusCode: 200,
       body: JSON.stringify(ranks),
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*", // CORS 허용
+        "Access-Control-Allow-Origin": "*",
       },
     };
   } catch (error) {
+    console.error("크롤링 오류:", error.message);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message }),
