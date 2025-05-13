@@ -5,38 +5,38 @@ const path = require('path');
 
 exports.handler = async () => {
   try {
-    const response = await axios.get('https://sports.news.naver.com/kbaseball/record/index?category=kbo');
-    const $ = cheerio.load(response.data);
-    const rows = $('.tbl_board tbody tr');
+    const url = 'https://sports.news.naver.com/kbaseball/record/index?category=kbo';
+    const { data } = await axios.get(url);
+    const $ = cheerio.load(data);
 
-    const data = [];
-    rows.each((index, row) => {
-      const columns = $(row).find('td');
-      data.push({
-        rank: index + 1,
-        team: $(columns[0]).text().trim(),
-        games: $(columns[1]).text().trim(),
-        win: $(columns[2]).text().trim(),
-        draw: $(columns[3]).text().trim(),
-        lose: $(columns[4]).text().trim(),
-        winRate: $(columns[5]).text().trim(),
-        gameGap: $(columns[6]).text().trim(),
-        recent10: $(columns[7]).text().trim(),
-        streak: $(columns[8]).text().trim(),
+    const rows = $('.tbl_box .tbl tbody tr');
+    const result = [];
+
+    rows.each((i, el) => {
+      const cols = $(el).find('td');
+      result.push({
+        rank: i + 1,
+        team: $(cols[0]).text().trim(),
+        game: $(cols[1]).text().trim(),
+        win: $(cols[2]).text().trim(),
+        lose: $(cols[3]).text().trim(),
+        draw: $(cols[4]).text().trim(),
+        rate: $(cols[5]).text().trim(),
+        gap: $(cols[6]).text().trim()
       });
     });
 
-    const output = JSON.stringify(data, null, 2);
+    const outputPath = path.resolve(__dirname, '../../data/kbo_rank.json');
+    fs.writeFileSync(outputPath, JSON.stringify(result, null, 2));
+
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: output
+      body: JSON.stringify({ message: 'KBO 순위가 성공적으로 갱신되었습니다.' })
     };
   } catch (error) {
-    console.error(error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: '크롤링 실패', detail: error.message })
+      body: JSON.stringify({ error: error.message })
     };
   }
 };
