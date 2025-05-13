@@ -1,76 +1,57 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
-const fetch = require("node-fetch");
+const axios = require('axios');
+const cheerio = require('cheerio');
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
-exports.handler = async function () {
+exports.handler = async (event, context) => {
   try {
-    // 1. 크롤링 대상 URL (Naver KBO 순위)
-    console.log("1");
-    const url = "https://sports.news.naver.com/kbaseball/record/index.nhn?category=kbo";
-    const res = await axios.get(url);
-    const $ = cheerio.load(res.data);
+    console.log('📦 KBO 순위 데이터 수집 시작...');
 
-    // 2. 순위 테이블 파싱
-    const rows = $("table.tbl_box tbody tr");
-    const ranks = [];
+    const response = await axios.get('https://sports.news.naver.com/kbaseball/record/index?category=kbo');
+    const $ = cheerio.load(response.data);
+    const rows = $('.tbl_board tbody tr');
 
-    rows.each((_, row) => {
-      const tds = $(row).find("td");
-      if (tds.length >= 6) {
-        ranks.push({
-          team: tds.eq(1).text().trim(),
-          win: Number(tds.eq(2).text().trim()),
-          loss: Number(tds.eq(3).text().trim()),
-          draw: Number(tds.eq(4).text().trim()),
-          rate: tds.eq(5).text().trim(),
-        });
-      }
+    const data = [];
+    rows.each((index, row) => {
+      const columns = $(row).find('td');
+      data.push({
+        rank: index + 1,
+        team: $(columns[0]).text().trim(),
+        games: $(columns[1]).text().trim(),
+        win: $(columns[2]).text().trim(),
+        draw: $(columns[3]).text().trim(),
+        lose: $(columns[4]).text().trim(),
+        winRate: $(columns[5]).text().trim(),
+        gameGap: $(columns[6]).text().trim(),
+        recent10: $(columns[7]).text().trim(),
+        streak: $(columns[8]).text().trim(),
+      });
     });
 
-    const jsonContent = JSON.stringify(ranks, null, 2);
+    console.log('✅ 순위 데이터 크롤링 성공');
 
-    // 3. GitHub API로 파일 업데이트
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-    const REPO_NAME = process.env.REPO_NAME;
-    const FILE_PATH = process.env.KBO_FILE_PATH || "data/kbo_rank.json";
-    const BRANCH = process.env.GIT_BRANCH || "main";
+    const filePath = path.join(__dirname, '../../data/kbo_rank.json');
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    console.log('✅ JSON 파일 저장 완료:', filePath);
 
-    // 현재 SHA 가져오기
-    const metaRes = await fetch(`https://api.github.com/repos/${REPO_NAME}/contents/${FILE_PATH}`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        Accept: "application/vnd.github.v3+json",
-      },
-    });
+    // Git commit & push
+    execSync('git config --global user.email "bot@netlify.com"');
+    execSync('git config --global user.name "Netlify Bot"');
+    execSync('git add data/kbo_rank.json');
+    execSync('git commit -m "자동 업데이트: KBO 순위 갱신"');
+    execSync('git push origin main');
+    console.log('✅ GitHub 푸시 완료');
 
-    const metadata = await metaRes.json();
-    const sha = metadata.sha;
-
-    // 파일 업데이트
-    const updateRes = await fetch(`https://api.github.com/repos/${REPO_NAME}/contents/${FILE_PATH}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        Accept: "application/vnd.github.v3+json",
-      },
-      body: JSON.stringify({
-        message: "🤖 Update KBO ranking data",
-        content: Buffer.from(jsonContent).toString("base64"),
-        branch: BRANCH,
-        sha,
-      }),
-    });
-
-    const result = await updateRes.json();
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Updated successfully", result }),
+      body: JSON.stringify({ message: 'KBO 순위 자동 갱신 완료!' })
     };
-  } catch (err) {
-    console.error("KBO 업데이트 실패:", err);
+  } catch (error) {
+    console.error('❌ 오류 발생:', error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "KBO 크롤링 실패", detail: err.message }),
+      body: JSON.stringify({ error: 'KBO 순위 갱신 실패', details: error.message })
     };
   }
 };
